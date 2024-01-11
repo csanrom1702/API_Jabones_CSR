@@ -38,7 +38,6 @@ public class JabonServiceImpl implements JabonService {
 	@Override
 	public void deleteById(Long id) {
 	    jabonRepository.deleteById(id);
-		
 	}
 
 	@Override

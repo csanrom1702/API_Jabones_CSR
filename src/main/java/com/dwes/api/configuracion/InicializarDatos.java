@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import com.dwes.api.entidades.Categoria;
 import com.dwes.api.entidades.Ingrediente;
 import com.dwes.api.entidades.Jabon;
 import com.dwes.api.entidades.Producto;
 import com.dwes.api.entidades.enumerados.TipoDePiel;
+import com.dwes.api.repositorios.CategoriaRepository;
 import com.dwes.api.repositorios.JabonRepository;
 import com.dwes.api.repositorios.ProductoRepository;
 import com.github.javafaker.Faker;
@@ -18,39 +20,56 @@ import com.github.javafaker.Faker;
 @Component
 public class InicializarDatos implements CommandLineRunner {
 
+	@Autowired
+	private JabonRepository jabonRepository;
 
-    @Autowired
-    private JabonRepository jabonRepository;
-    
-    Faker faker = new Faker();
-    
-    
+	@Autowired
+	private CategoriaRepository categoriaRepository;
+
+	Faker faker = new Faker();
+
 	@Override
 	public void run(String... args) throws Exception {
 		
-
-
         for (int i = 0; i < 100; i++) {
-            Jabon jabon = new Jabon();
-            jabon.setNombre(faker.commerce().productName());
-            jabon.setPrecio(Double.parseDouble(faker.commerce().price().replaceAll("[^\\d.]+", "")));
-            jabon.setDescripcion(faker.lorem().sentence());
-            jabon.setStock(faker.number().numberBetween(0, 100));
-            jabon.setImagenUrl(generarUrlImagenAleatoria());
-            jabon.setAroma(faker.lorem().word());
-            jabon.setTipoDePiel(TipoDePiel.values()[faker.random().nextInt(TipoDePiel.values().length)]); // Asume que tienes una enumeración TipoDePiel
-            
-            List<Ingrediente> ingredientes = new ArrayList<>();
-            for (int j = 0; j < faker.number().numberBetween(1, 5); j++) {
-                // Asume que tienes un método para generar un Ingrediente ficticio
-                ingredientes.add(generarIngredienteFicticio(faker));
-            }
-            jabon.setIngredientes(ingredientes);
-
+            Jabon jabon = generarJabonAleatorio();
             jabonRepository.save(jabon);
         }
-	}
-	
+
+        // Inicializar Categorías
+        for (int i = 0; i < 10; i++) { // Por ejemplo, inicializar 10 categorías
+            Categoria categoria = generarCategoriaAleatoria();
+            categoriaRepository.save(categoria);
+        }
+    }
+
+    private Jabon generarJabonAleatorio() {
+        Jabon jabon = new Jabon();
+        jabon.setNombre(faker.commerce().productName());
+        jabon.setPrecio(Double.parseDouble(faker.commerce().price().replaceAll("[^\\d.]+", "")));
+        jabon.setDescripcion(faker.lorem().sentence());
+        jabon.setStock(faker.number().numberBetween(0, 100));
+        jabon.setImagenUrl(generarUrlImagenAleatoria());
+        jabon.setAroma(faker.lorem().word());
+        jabon.setTipoDePiel(TipoDePiel.values()[faker.random().nextInt(TipoDePiel.values().length)]);
+
+        List<Ingrediente> ingredientes = new ArrayList<>();
+        for (int j = 0; j < faker.number().numberBetween(1, 5); j++) {
+            ingredientes.add(generarIngredienteFicticio(faker));
+        }
+        jabon.setIngredientes(ingredientes);
+
+        return jabon;
+    }
+
+    private Categoria generarCategoriaAleatoria() {
+        Categoria categoria = new Categoria();
+        categoria.setNombre(faker.commerce().department());
+        categoria.setDescripcion(faker.lorem().sentence());
+
+        return categoria;
+    }
+
 	private Ingrediente generarIngredienteFicticio(Faker faker) {
 	    Ingrediente ingrediente = new Ingrediente();
 	    String[] elementos = {"jabón de glicerina", "gel aloe vera", "miel", "aceite de oliva", "ralladura de limón", "aceite esencial"};
@@ -72,8 +91,8 @@ public class InicializarDatos implements CommandLineRunner {
 
 	    return ingrediente;
 	}
-	
-	 private String generarUrlImagenAleatoria() {
+
+	private String generarUrlImagenAleatoria() {
 	        return "https://e00-telva.uecdn.es/assets/multimedia/imagenes/2019/11/08/15732087888279.jpg";
 	    }
 }

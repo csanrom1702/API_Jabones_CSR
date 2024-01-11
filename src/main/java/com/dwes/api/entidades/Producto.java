@@ -1,9 +1,14 @@
 package com.dwes.api.entidades;
 
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -33,6 +38,14 @@ public class Producto {
     private Integer stock;
     
     private String imagenUrl;
+    
+	 @ManyToMany
+	    @JoinTable(
+	        name = "producto_categoria", 
+	        joinColumns = @JoinColumn(name = "producto_id"), 
+	        inverseJoinColumns = @JoinColumn(name = "categoria_id")
+	    )
+	    private Set<Categoria> categorias;
 
 	public Long getId() {
 		return id;
@@ -81,8 +94,12 @@ public class Producto {
 	public void setImagenUrl(String imagenUrl) {
 		this.imagenUrl = imagenUrl;
 	}
-	
-	
 
-   
+	public Set<Categoria> getCategorias() {
+		return categorias;
+	}
+
+	public void setCategorias(Set<Categoria> categorias) {
+		this.categorias = categorias;
+	}
 }

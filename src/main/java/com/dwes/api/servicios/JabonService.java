@@ -16,11 +16,9 @@ public interface JabonService {
     Jabon save(Jabon jabon);
     void deleteById(Long jabonId);
     
-
     // Métodos para paginación y búsqueda
     List<Ingrediente> findIngredientesByJabonId(Long jabonId);
     Page<Jabon> findAllByIngredientesContaining(String ingrediente, Pageable pageable);
     Page<Jabon> findByTipoDePiel(TipoDePiel tipoDePiel, Pageable pageable);
 	boolean existsById(Long id);
-  
 }

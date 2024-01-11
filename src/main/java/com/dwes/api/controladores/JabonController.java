@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
-@RequestMapping("/api/v1/jabones")
+@RequestMapping("/api/v2/jabones")
 public class JabonController {
 
     private static final Logger logger = LoggerFactory.getLogger(JabonController.class);
