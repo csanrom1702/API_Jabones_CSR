@@ -1,5 +1,6 @@
 package com.dwes.api.controladores;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dwes.api.entidades.Categoria;
+import com.dwes.api.entidades.Ingrediente;
+import com.dwes.api.entidades.Producto;
 import com.dwes.api.errores.CategoriaNotFoundException;
 import com.dwes.api.servicios.CategoriaService;
 
@@ -50,6 +53,19 @@ public class CategoriaController {
         Categoria categoria = categoriaService.findById(id)
                 .orElseThrow(() -> new CategoriaNotFoundException("Categoría con ID " + id + " no encontrada"));
         return ResponseEntity.ok(categoria);
+    }
+    
+    @GetMapping("/{id}/productos")
+    @Operation(summary = "Obtener productos de una categoria por ID", description = "Devuelve una lista de ingredientes para un jabón específico")
+    @ApiResponse(responseCode = "200", description = "Lista de productos encontrada")
+    @ApiResponse(responseCode = "404", description = "Ingredientes no encontrados o jabón no existe")
+    public ResponseEntity<List<Producto>> getProductosByCategoriaId(@PathVariable Long id) {
+    	   logger.info("## getProductosByCategoriaId ({}) ##",id);
+    	List<Producto> productos = categoriaService.findProductosByCategoriaId(id);
+        if (productos.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productos);
     }
 
     @PutMapping("/{id}")

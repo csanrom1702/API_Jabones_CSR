@@ -1,5 +1,7 @@
 package com.dwes.api.servicios.impl;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dwes.api.entidades.Categoria;
+import com.dwes.api.entidades.Jabon;
+import com.dwes.api.entidades.Producto;
 import com.dwes.api.repositorios.CategoriaRepository;
 import com.dwes.api.servicios.CategoriaService;
 
@@ -40,6 +44,13 @@ public class CategoriaServiceImpl implements CategoriaService {
 	@Override
 	public Page<Categoria> findAll(Pageable pageable) {
 		return categoriaRepository.findAll(pageable);
+	}
+
+	@Override
+	public List<Producto> findProductosByCategoriaId(Long categoriaId) {
+	    return categoriaRepository.findById(categoriaId)
+	            .map(Categoria::getProductos)
+	            .orElse(Collections.emptyList());
 	}
 
 }

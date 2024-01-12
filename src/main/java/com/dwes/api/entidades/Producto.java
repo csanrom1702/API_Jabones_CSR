@@ -2,6 +2,8 @@ package com.dwes.api.entidades;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,6 +47,7 @@ public class Producto {
 	        joinColumns = @JoinColumn(name = "producto_id"), 
 	        inverseJoinColumns = @JoinColumn(name = "categoria_id")
 	    )
+	 	@JsonIgnoreProperties("productos")
 	    private Set<Categoria> categorias;
 
 	public Long getId() {
